@@ -26,8 +26,8 @@ impl GameBoard {
 
   pub fn place_block(&mut self, place_position: u8, block: &Block) -> &Self {
     let cells = block.get_cells();
-    for (_, val) in cells.iter().enumerate() {
-      self.body[place_position as usize + *val as usize] = 1;
+    for (_, &val) in cells.iter().enumerate() {
+      self.body[place_position as usize + val as usize] = 1;
     }
     self
   }
@@ -35,8 +35,8 @@ impl GameBoard {
   pub fn is_able_to_place_block(&mut self, place_position: u8, block: &Block) -> bool {
     let mut is_able: bool = true;
     let cells = block.get_cells();
-    for (_, val) in cells.iter().enumerate() {
-      if self.body[place_position as usize + *val as usize] == 1 {
+    for (_, &val) in cells.iter().enumerate() {
+      if self.body[place_position as usize + val as usize] == 1 {
         is_able = false;
       }
     }
@@ -45,8 +45,8 @@ impl GameBoard {
 
   pub fn calc_score(&self) -> f32 {
     let mut score: f32 = 0.0;
-    for (i, val) in self.body.iter().enumerate() {
-      if *val == 0 {
+    for (i, &val) in self.body.iter().enumerate() {
+      if val == 0 {
         score += 1.0 + ScoreDistribution::get_score_at(i as u8);
       }
     }
