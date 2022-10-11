@@ -1,4 +1,6 @@
-use super::{block::Block, ripe_cases::RipeCases, score_distribution::ScoreDistribution};
+use super::{
+  block::Block, ripe_cases::RipeCases, score_distribution::ScoreDistribution, solution::Solution,
+};
 use std::fmt::Display;
 
 pub struct GameBoard {
@@ -104,14 +106,21 @@ impl GameBoard {
     match self.history.last() {
       Some(&previous_body) => {
         self.body = previous_body;
-      },
+      }
       None => {
         self.body = [0; 81];
-      },
+      }
     }
   }
 
   pub fn get_body(&self) -> [u8; 81] {
     self.body
+  }
+
+  pub fn apply_solution(&mut self, solution: &Solution) -> () {
+    let listed_solution = solution.list_out();
+    for (_, &(block, _, position)) in listed_solution.iter().enumerate() {
+      self.place_block(position, block);
+    }
   }
 }

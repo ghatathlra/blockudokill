@@ -37,4 +37,13 @@ impl<'a> Solution<'a> {
   pub fn record(&mut self, block: &'a Block, order: u8, position: u8) {
     self.placement.insert(block, (order, position));
   }
+
+  pub fn list_out(&self) -> Vec<(&Block, u8, u8)> {
+    let mut result: Vec<(&Block, u8, u8)> = vec![];
+    for (&block, &(order, position)) in self.placement.iter() {
+      result.push((block, order, position))
+    }
+    result.sort_by(|a, b| a.1.cmp(&b.1));
+    result
+  }
 }

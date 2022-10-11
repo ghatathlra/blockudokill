@@ -7,7 +7,7 @@ use super::{
 pub struct Solver;
 
 impl Solver {
-  pub fn solve<'a>(gameboard: &'a mut GameBoard, blocks: [&'a Block; 3]) -> Solution<'a> {
+  pub fn solve<'a>(gameboard: &mut GameBoard, blocks: [&'a Block; 3]) -> Solution<'a> {
     let mut best_score: f32 = 0.0;
     let mut solution = Solution::new();
     let block_permutations = Solver::generate_block_permutations(blocks);
@@ -23,7 +23,7 @@ impl Solver {
     solution
   }
 
-  fn solve_on_one_block_permutation<'a>(gameboard: &'a mut GameBoard, blocks: [&'a Block; 3]) -> (f32, (u8, u8, u8)) {
+  fn solve_on_one_block_permutation<'a>(gameboard: &mut GameBoard, blocks: [&'a Block; 3]) -> (f32, (u8, u8, u8)) {
     let mut best_state: (f32, (u8, u8, u8)) = (0.0, (0, 0, 0));
     let gameboard_body = gameboard.get_body();
 
