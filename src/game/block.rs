@@ -1,5 +1,9 @@
 use std::fmt::{Display, Result};
+use std::cmp::{PartialEq, Eq};
+use std::ptr::eq as ptr_eq;
+use std::hash::Hash;
 
+#[derive(Hash)]
 pub struct Block {
   cells: Vec<u8>,
   width: u8,
@@ -21,6 +25,18 @@ impl Display for Block {
     write!(f, "{}", output)
   }
 }
+
+impl PartialEq for Block {
+  fn eq(&self, other: &Self) -> bool {
+    ptr_eq(self, other)
+  }
+
+  fn ne(&self, other: &Self) -> bool {
+    !ptr_eq(self, other)
+  }
+}
+
+impl Eq for Block {}
 
 impl Block {
   pub fn from_cells(cells: Vec<u8>) -> Self {

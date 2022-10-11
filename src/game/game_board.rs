@@ -24,21 +24,20 @@ impl GameBoard {
   pub fn new() -> Self {
     GameBoard {
       body: [0; 81],
-      history: vec![[0; 81]],
+      history: vec![],
     }
   }
 
-  pub fn place_block(&mut self, place_position: u8, block: &Block) -> &Self {
+  pub fn place_block(&mut self, place_position: u8, block: &Block) -> () {
     let cells = block.get_cells();
     for (_, &val) in cells.iter().enumerate() {
       self.body[place_position as usize + val as usize] = 1;
     }
     self.harvest();
     self.commit();
-    self
   }
 
-  pub fn is_able_to_place_block(&mut self, place_position: u8, block: &Block) -> bool {
+  pub fn is_able_to_place_block(&self, place_position: u8, block: &Block) -> bool {
     let mut is_able: bool = true;
     let x = place_position % 9;
     let y = place_position / 9;
@@ -101,8 +100,18 @@ impl GameBoard {
   }
 
   pub fn rollback(&mut self) -> () {
-    if let Some(previous_body) = self.history.pop() {
-      self.body = previous_body;
+    self.history.pop();
+    match self.history.last() {
+      Some(&previous_body) => {
+        self.body = previous_body;
+      },
+      None => {
+        self.body = [0; 81];
+      },
     }
+  }
+
+  pub fn get_body(&self) -> [u8; 81] {
+    self.body
   }
 }
