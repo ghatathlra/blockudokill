@@ -5,7 +5,8 @@ use std::fmt::{Display, Result};
 impl<'a> Display for Solution<'a> {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result {
     let mut output = String::new();
-    for (&block, &(order, position)) in self.placement.iter() {
+    let listed_out = self.list_out();
+    for (_, &(block, order, position)) in listed_out.iter().enumerate() {
       let mut serialized_cells = String::new();
       let mut cell_iterator = block.get_cells().iter();
       while let Some(cellval) = cell_iterator.next() {
@@ -14,7 +15,7 @@ impl<'a> Display for Solution<'a> {
       }
       output = output
         + format!(
-          "Block: {}, order: {}, position: {}\n",
+          "Block: {}\t\torder: {}\tposition: {}\n",
           serialized_cells, order, position
         )
         .as_str();
