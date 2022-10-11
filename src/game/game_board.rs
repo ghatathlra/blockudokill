@@ -104,12 +104,8 @@ impl GameBoard {
   pub fn rollback(&mut self) -> () {
     self.history.pop();
     match self.history.last() {
-      Some(&previous_body) => {
-        self.body = previous_body;
-      }
-      None => {
-        self.body = [0; 81];
-      }
+      Some(&previous_body) => self.body = previous_body,
+      None => self.body = [0; 81],
     }
   }
 
