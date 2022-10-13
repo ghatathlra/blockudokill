@@ -6,19 +6,8 @@ impl<'a> Display for Solution<'a> {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result {
     let mut output = String::new();
     let listed_out = self.list_out();
-    for (_, &(block, order, position)) in listed_out.iter().enumerate() {
-      let mut serialized_cells = String::new();
-      let mut cell_iterator = block.get_cells().iter();
-      while let Some(cellval) = cell_iterator.next() {
-        serialized_cells = serialized_cells + cellval.to_string().as_str();
-        serialized_cells.push(' ');
-      }
-      output = output
-        + format!(
-          "Block: {}\t\torder: {}\tposition: {}\n",
-          serialized_cells, order, position
-        )
-        .as_str();
+    for (_, &(block, _, position)) in listed_out.iter().enumerate() {
+      output = output + format!("{}Position: {}\n", block.get_shape(), position).as_str();
     }
     write!(f, "{}", output)
   }

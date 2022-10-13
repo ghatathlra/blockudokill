@@ -1,8 +1,4 @@
-use super::{
-  game_board::GameBoard,
-  block::Block,
-  solution::Solution,
-};
+use super::{block::Block, game_board::GameBoard, solution::Solution};
 
 pub struct Solver;
 
@@ -12,7 +8,8 @@ impl Solver {
     let mut solution = Solution::new();
     let block_permutations = Solver::generate_block_permutations(blocks);
     for (_, &blckpermutation) in block_permutations.iter().enumerate() {
-      let (score, (p1, p2, p3)) = Solver::solve_on_one_block_permutation(gameboard, blckpermutation);
+      let (score, (p1, p2, p3)) =
+        Solver::solve_on_one_block_permutation(gameboard, blckpermutation);
       if score > best_score {
         best_score = score;
         solution.record(blckpermutation[0], 0, p1);
@@ -23,7 +20,10 @@ impl Solver {
     solution
   }
 
-  fn solve_on_one_block_permutation<'a>(gameboard: &mut GameBoard, blocks: [&'a Block; 3]) -> (f32, (u8, u8, u8)) {
+  fn solve_on_one_block_permutation<'a>(
+    gameboard: &mut GameBoard,
+    blocks: [&'a Block; 3],
+  ) -> (f32, (u8, u8, u8)) {
     let mut best_state: (f32, (u8, u8, u8)) = (0.0, (0, 0, 0));
     let gameboard_body = gameboard.get_body();
 
@@ -41,7 +41,7 @@ impl Solver {
                 let current_score = gameboard.calc_score();
                 if current_score > best_state.0 {
                   best_state = (current_score, (i as u8, j as u8, k as u8))
-                } 
+                }
                 gameboard.rollback();
               }
             }

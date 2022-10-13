@@ -1,7 +1,8 @@
+use std::cmp::{Eq, PartialEq};
+use std::collections::HashSet;
 use std::fmt::{Display, Result};
-use std::cmp::{PartialEq, Eq};
-use std::ptr::eq as ptr_eq;
 use std::hash::Hash;
+use std::ptr::eq as ptr_eq;
 
 #[derive(Hash)]
 pub struct Block {
@@ -55,8 +56,8 @@ impl Block {
     }
   }
 
-  pub fn get_cells(&self) -> &Vec<u8> {
-    &self.cells
+  pub fn get_cells(&self) -> Vec<u8> {
+    self.cells.clone()
   }
 
   pub fn get_width(&self) -> u8 {
@@ -65,5 +66,27 @@ impl Block {
 
   pub fn get_height(&self) -> u8 {
     self.height
+  }
+
+  pub fn get_shape(&self) -> String {
+    let mut shape_string = String::new();
+    let mut seen: HashSet<u8> = HashSet::new();
+    for (_, &val) in self.cells.iter().enumerate() {
+      seen.insert(val);
+    }
+    for y in 0..self.get_height() {
+      let mut line = String::new();
+      for x in 0..self.get_width() {
+        let cell: u8 = y * 9 + x;
+        line.push(if seen.contains(&cell) {
+          '\u{2588}'
+        } else {
+          ' '
+        });
+      }
+      line.push('\n');
+      shape_string.push_str(line.as_str());
+    }
+    shape_string
   }
 }

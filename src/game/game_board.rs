@@ -30,6 +30,27 @@ impl GameBoard {
     }
   }
 
+  pub fn from_cells(cells: Vec<u8>) -> Self {
+    let mut body: [u8; 81] = [0; 81];
+    for (_, &cell) in cells.iter().enumerate() {
+      body[cell as usize] = 1;
+    }
+    GameBoard {
+      body,
+      history: vec![],
+    }
+  }
+
+  pub fn get_cells(&self) -> Vec<u8> {
+    let mut cells: Vec<u8> = vec![];
+    for (i, &val) in self.body.iter().enumerate() {
+      if val == 1 {
+        cells.push(i as u8);
+      }
+    }
+    cells
+  }
+
   pub fn place_block(&mut self, place_position: u8, block: &Block) -> () {
     let cells = block.get_cells();
     for (_, &val) in cells.iter().enumerate() {
