@@ -8,6 +8,7 @@ import styles from './GameBoard.module.css';
 type Props = {
   gameState: number[];
   placements: Placement[];
+  onCellClick: (i: number) => void;
 };
 
 function getCellColor(i: number, gameState: number[], placements: Placement[]): string {
@@ -29,11 +30,18 @@ function getCellColor(i: number, gameState: number[], placements: Placement[]): 
 }
 
 const GameBoard: FC<Props> = (props) => {
-  const {gameState, placements} = props;
+  const {gameState, placements, onCellClick} = props;
   return (
     <div className={styles.gameboard}>
       {Array.from(new Array(81).keys()).map((i) => (
-        <div key={i} style={{backgroundColor: getCellColor(i, gameState, placements)}} className={styles.cell} />
+        <div
+          key={i}
+          className={styles.cell}
+          style={{backgroundColor: getCellColor(i, gameState, placements)}}
+          onClick={() => {
+            onCellClick(i);
+          }}
+        />
       ))}
     </div>
   );

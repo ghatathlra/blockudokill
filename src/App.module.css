@@ -22,10 +22,34 @@
   flex-direction: column;
 }
 
-.submitbutton {
+.gameboardcontrol {
   margin-top: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.viewmodebutton {
+  margin-right: .25rem;
   padding: 0.75rem 1rem;
-  width: 100%;
+  flex: 1;
+  border: none;
+  border-radius: 0.125rem;
+  background-color: #e8e8f6;
+  text-align: center;
+  color: #4040b8;
+  font-weight: bold;
+  cursor: pointer;
+  transition-duration: .15s;
+}
+
+.viewmodebutton:hover {
+  background-color: #d5d5ef;
+}
+
+.submitbutton {
+  margin-left: .25rem;
+  padding: 0.75rem 1rem;
+  flex: 1;
   border: none;
   border-radius: 0.125rem;
   background-color: #4040b8;

@@ -12,11 +12,11 @@ import styles from './App.module.css';
 
 const App: FC<{}> = () => {
   const [solverInitialized, setSolverInitialized] = useState<boolean>(false);
-
+  const [placementsViewMode, setPlacementsViewMode] = useState<boolean>(true);
   const [selectedBlocks, setSelectedBlocks] = useState<Block[]>([]);
   const [placements, setPlacements] = useState<Placement[]>([]);
+  const [previousGameState, setPreviousGameState] = useState<number[]>([]);
   const [currentGameState, setCurrentGameState] = useState<number[]>([]);
-  const [nextGameState, setNextGameState] = useState<number[]>([]);
 
   useEffect(() => {
     init().then(() => {
@@ -24,17 +24,31 @@ const App: FC<{}> = () => {
     });
   }, []);
 
+  const handleGameBoardCellClick = useCallback((i: number) => {
+    if (!placementsViewMode) {
+      if (currentGameState.includes(i)) {
+        setCurrentGameState(currentGameState.filter((cell) => cell !== i));
+      } else {
+        setCurrentGameState([...currentGameState, i]);
+      }
+    }
+  }, [placementsViewMode, currentGameState]);
+
+  const handleSwitchViewMode = useCallback(() => {
+    setPlacementsViewMode((placementsViewMode) => !placementsViewMode);
+  }, []);
+
   const handleSolve = useCallback(() => {
     if (solverInitialized) {
       if (selectedBlocks.length === 3) {
-        setCurrentGameState(nextGameState);
-        const gameboard = Uint8Array.from(nextGameState);
+        setPreviousGameState(currentGameState);
+        const gameboard = Uint8Array.from(currentGameState);
         const block1 = Uint8Array.from(selectedBlocks[0].getCells());
         const block2 = Uint8Array.from(selectedBlocks[1].getCells());
         const block3 = Uint8Array.from(selectedBlocks[2].getCells());
         const solveResult: SolveResult = solve(gameboard, block1, block2, block3);
         setPlacements(solveResult.placements);
-        setNextGameState(solveResult.next_state);
+        setCurrentGameState(solveResult.next_state);
         setSelectedBlocks([]);
         console.log(solveResult);
       } else {
@@ -43,17 +57,26 @@ const App: FC<{}> = () => {
     } else {
       alert('Solver is not initialized!');
     }
-  }, [solverInitialized, selectedBlocks, nextGameState]);
+  }, [solverInitialized, selectedBlocks, currentGameState]);
 
   return (
     <div className={styles.app}>
       <div className={styles.playground}>
         <div className={styles.gameboardouter}>
           <div className={styles.gameboardinner}>
-            <GameBoard gameState={currentGameState} placements={placements} />
-            <button type="button" className={styles.submitbutton} onClick={handleSolve}>
-              Next &gt;&gt;
-            </button>
+            <GameBoard
+              gameState={placementsViewMode ? previousGameState : currentGameState}
+              placements={placementsViewMode ? placements : []}
+              onCellClick={handleGameBoardCellClick}
+            />
+            <div className={styles.gameboardcontrol}>
+              <button type="button" className={styles.viewmodebutton} onClick={handleSwitchViewMode}>
+                {placementsViewMode ? 'Placements View' : 'State View'}
+              </button>
+              <button type="button" className={styles.submitbutton} onClick={handleSolve}>
+                Next &gt;&gt;
+              </button>
+            </div>
           </div>
         </div>
         <div className={styles.blockspreview}>
