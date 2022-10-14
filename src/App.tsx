@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {FC, useState, useEffect} from 'react';
+import {init, solve} from 'blockudokill-solver';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+// import './App.module.css';
+
+const App: FC<{}> = () => {
+  const [solverInitialized, setSolverInitialized] = useState<boolean>(false);
+
+  useEffect(() => {
+    init().then(() => {
+      setSolverInitialized(true)
+    })
+  }, []);
+
+  useEffect(() => {
+    if (solverInitialized) {
+      const gameboard = new Uint8Array(0).fill(0);
+      const block1 = new Uint8Array(1).fill(0);
+      const block2 = new Uint8Array(1).fill(0);
+      const block3 = new Uint8Array(1).fill(0);
+      console.log(solve(gameboard, block1, block2, block3));
+    }
+  }, [solverInitialized]);
+
+  return <div className="App">Hello</div>;
+};
 
 export default App;
