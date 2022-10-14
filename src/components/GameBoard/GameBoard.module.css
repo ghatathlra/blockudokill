@@ -1,0 +1,10 @@
+.gameboard {
+  display: inline-grid;
+  gap: 1px;
+  grid-template-columns: repeat(9, auto);
+}
+
+.cell {
+  width: 2rem;
+  height: 2rem;
+}

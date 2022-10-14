@@ -1,0 +1,18 @@
+.blocksform {
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+}
+
+.blockcontainer {
+  position: relative;
+  width: 7rem;
+  height: 7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition-duration: .15s;
+}
+
+.blockcontainer:hover:not(.selected) {
+  background-color: #e3e3f4;
+}
