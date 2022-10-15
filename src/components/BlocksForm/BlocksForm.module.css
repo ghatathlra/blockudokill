@@ -1,6 +1,6 @@
 .blocksform {
   display: grid;
-  grid-template-columns: repeat(5, auto);
+  grid-template-columns: repeat(7, auto);
 }
 
 .blockcontainer {
