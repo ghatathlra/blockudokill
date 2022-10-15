@@ -52,12 +52,12 @@ impl GameBoard {
   }
 
   pub fn place_block(&mut self, place_position: u8, block: &Block) -> () {
+    self.commit();
     let cells = block.get_cells();
     for (_, &val) in cells.iter().enumerate() {
       self.body[place_position as usize + val as usize] = 1;
     }
     self.harvest();
-    self.commit();
   }
 
   pub fn is_able_to_place_block(&self, place_position: u8, block: &Block) -> bool {
@@ -123,10 +123,9 @@ impl GameBoard {
   }
 
   pub fn rollback(&mut self) -> () {
-    self.history.pop();
-    match self.history.last() {
-      Some(&previous_body) => self.body = previous_body,
-      None => self.body = [0; 81],
+    if self.history.len() > 0 {
+      let previous_body = self.history.pop().unwrap();
+      self.body = previous_body;
     }
   }
 
