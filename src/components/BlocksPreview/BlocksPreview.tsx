@@ -13,8 +13,9 @@ const BlocksPreview: FC<Props> = (props) => {
   const {value, onChange} = props;
 
   const handleDeleteBlock = useCallback(
-    (block: Block) => {
-      const newValue = value.filter((blck) => blck.getSignature() !== block.getSignature());
+    (i: number) => {
+      const newValue = [...value];
+      newValue.splice(i, 1);
       onChange(newValue);
     },
     [value, onChange],
@@ -27,7 +28,7 @@ const BlocksPreview: FC<Props> = (props) => {
           key={i}
           className={styles.blockcontainer}
           onClick={() => {
-            handleDeleteBlock(block);
+            handleDeleteBlock(i);
           }}
         >
           <BlockComponent block={block} />

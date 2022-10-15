@@ -35,8 +35,4 @@ export class Block {
   getCells(): number[] {
     return this.cells || [];
   }
-
-  getSignature(): string {
-    return [...this.cells].sort().join('_');
-  }
 }
