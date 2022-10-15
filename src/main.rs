@@ -1,6 +1,6 @@
-extern crate blockudokill;
+extern crate blockudokill_solver;
 
-use blockudokill::game::{
+use blockudokill_solver::game::{
   all_blocks::AllBlockCells, block::Block, game_board::GameBoard, solver::Solver,
 };
 use std::io::stdin;
