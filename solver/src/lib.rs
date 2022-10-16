@@ -48,6 +48,7 @@ pub fn calc_score(gameboard_body: Vec<u8>) -> JsValue {
   let js_score = GameBoardScore {
     spaces: score.spaces,
     holes: score.holes,
+    tears: score.tears,
     bonus: score.bonus,
   };
   to_value(&js_score).unwrap()

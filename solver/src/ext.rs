@@ -17,5 +17,6 @@ pub struct SolveResult {
 pub struct GameBoardScore {
   pub spaces: u8,
   pub holes: u8,
+  pub tears: u8,
   pub bonus: f32,
 }

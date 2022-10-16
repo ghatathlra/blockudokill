@@ -123,15 +123,17 @@ impl GameBoard {
       if cell_val == 0 {
         score.spaces += 1;
         score.bonus += BonusDistribution::get_score_at(i as u8);
-        if self.is_hole_cell(i) {
+        if self.is_hole(i) {
           score.holes += 1;
+        } else if self.is_tear(i) {
+          score.tears += 1;
         }
       }
     }
     score
   }
 
-  fn is_hole_cell(&self, i: usize) -> bool {
+  fn is_hole(&self, i: usize) -> bool {
     let mut is_hole = false;
     let cell_val = self.body[i];
     if cell_val == 0 {
@@ -142,6 +144,56 @@ impl GameBoard {
       is_hole = val_above == 1 && val_below == 1 && val_left == 1 && val_right == 1;
     }
     is_hole
+  }
+
+  fn is_tear(&self, i: usize) -> bool {
+    self.is_horizontal_tear(i) || self.is_vertical_tear(i)
+  }
+
+  fn is_horizontal_tear(&self, i: usize) -> bool {
+    let mut is_horizontal_tear = false;
+    let cell_val = self.body[i];
+    if cell_val == 0 && i % 9 < 8 {
+      let nextcell_val = self.body[i + 1];
+      if nextcell_val == 0 {
+        let val_above1: u8 = if i / 9 == 0 { 1 } else { self.body[i - 9] };
+        let val_above2: u8 = if i / 9 == 0 { 1 } else { self.body[i - 8] };
+        let val_below1: u8 = if i / 9 == 8 { 1 } else { self.body[i + 9] };
+        let val_below2: u8 = if i / 9 == 8 { 1 } else { self.body[i + 10] };
+        let val_left: u8 = if i % 9 == 0 { 1 } else { self.body[i - 1] };
+        let val_right: u8 = if i % 9 == 7 { 1 } else { self.body[i + 2] };
+        is_horizontal_tear = val_above1 == 1
+          && val_above2 == 1
+          && val_below1 == 1
+          && val_below2 == 1
+          && val_left == 1
+          && val_right == 1;
+      }
+    }
+    is_horizontal_tear
+  }
+
+  fn is_vertical_tear(&self, i: usize) -> bool {
+    let mut is_vertical_tear = false;
+    let cell_val = self.body[i];
+    if cell_val == 0 && i / 9 < 8 {
+      let nextcell_val = self.body[i + 9];
+      if nextcell_val == 0 {
+        let val_above: u8 = if i / 9 == 0 { 1 } else { self.body[i - 9] };
+        let val_below: u8 = if i / 9 == 7 { 1 } else { self.body[i + 18] };
+        let val_left1: u8 = if i % 9 == 0 { 1 } else { self.body[i - 1] };
+        let val_left2: u8 = if i % 9 == 0 { 1 } else { self.body[i + 8] };
+        let val_right1: u8 = if i % 9 == 8 { 1 } else { self.body[i + 1] };
+        let val_right2: u8 = if i % 9 == 8 { 1 } else { self.body[i + 10] };
+        is_vertical_tear = val_above == 1
+          && val_below == 1
+          && val_left1 == 1
+          && val_left2 == 1
+          && val_right1 == 1
+          && val_right2 == 1;
+      }
+    }
+    is_vertical_tear
   }
 
   pub fn rollback(&mut self) -> () {

@@ -6,15 +6,16 @@ use std::marker::Copy;
 #[derive(Clone, Copy)]
 pub struct Score {
   pub spaces: u8,
-  pub holes: u8,
+  pub holes: u8, // 1 cell is surrounded
+  pub tears: u8, // 2 cells are surrounded
   pub bonus: f32,
 }
 
 impl Display for Score {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result {
     let output = format!(
-      "Spaces: {}, Height: {}, Bonus: {}",
-      self.spaces, self.holes, self.bonus
+      "Spaces: {}, Holes: {}, Tears: {}, Bonus: {}",
+      self.spaces, self.holes, self.tears, self.bonus
     );
     write!(f, "{}", output)
   }
@@ -22,7 +23,10 @@ impl Display for Score {
 
 impl PartialEq for Score {
   fn eq(&self, other: &Self) -> bool {
-    self.spaces == other.spaces && self.holes == other.holes && self.bonus == other.bonus
+    self.spaces == other.spaces
+      && self.holes == other.holes
+      && self.tears == other.tears
+      && self.bonus == other.bonus
   }
 
   fn ne(&self, other: &Self) -> bool {
@@ -44,7 +48,11 @@ impl Ord for Score {
       match self.holes.cmp(&other.holes) {
         Ordering::Less => Ordering::Greater,
         Ordering::Greater => Ordering::Less,
-        Ordering::Equal => self.bonus.total_cmp(&other.bonus),
+        Ordering::Equal => match self.tears.cmp(&other.tears) {
+          Ordering::Less => Ordering::Greater,
+          Ordering::Greater => Ordering::Less,
+          Ordering::Equal => self.bonus.total_cmp(&other.bonus),
+        },
       }
     } else {
       self.spaces.cmp(&other.spaces)
@@ -58,6 +66,7 @@ impl Score {
     Score {
       spaces: 0,
       holes: 0,
+      tears: 0,
       bonus: 0.0,
     }
   }
