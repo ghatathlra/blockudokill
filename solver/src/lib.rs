@@ -1,7 +1,7 @@
 mod ext;
 pub mod game;
 
-use ext::{Placement, SolveResult};
+use ext::{GameBoardScore, Placement, SolveResult};
 use game::{block::Block, game_board::GameBoard, solver::Solver};
 use serde_wasm_bindgen::to_value;
 use wasm_bindgen::prelude::*;
@@ -39,4 +39,16 @@ pub fn solve(
     next_state: gameboard.get_cells(),
   };
   to_value(&solve_result).unwrap()
+}
+
+#[wasm_bindgen]
+pub fn calc_score(gameboard_body: Vec<u8>) -> JsValue {
+  let gameboard = GameBoard::from_cells(gameboard_body);
+  let score = gameboard.calc_score();
+  let js_score = GameBoardScore {
+    spaces: score.spaces,
+    holes: score.holes,
+    bonus: score.bonus,
+  };
+  to_value(&js_score).unwrap()
 }

@@ -1,10 +1,10 @@
-use super::{block::Block, game_board::GameBoard, solution::Solution};
+use super::{block::Block, game_board::GameBoard, solution::Solution, score::Score};
 
 pub struct Solver;
 
 impl Solver {
   pub fn solve<'a>(gameboard: &mut GameBoard, blocks: [&'a Block; 3]) -> Solution<'a> {
-    let mut best_score: f32 = 0.0;
+    let mut best_score: Score = Score::new();
     let mut solution = Solution::new();
     let block_permutations = Solver::generate_block_permutations(blocks);
     for (_, &blckpermutation) in block_permutations.iter().enumerate() {
@@ -23,8 +23,8 @@ impl Solver {
   fn solve_on_one_block_permutation<'a>(
     gameboard: &mut GameBoard,
     blocks: [&'a Block; 3],
-  ) -> (f32, (u8, u8, u8)) {
-    let mut best_state: (f32, (u8, u8, u8)) = (0.0, (0, 0, 0));
+  ) -> (Score, (u8, u8, u8)) {
+    let mut best_state: (Score, (u8, u8, u8)) = (Score::new(), (0, 0, 0));
     let gameboard_body = gameboard.get_body();
 
     for (i, _) in gameboard_body.iter().enumerate() {

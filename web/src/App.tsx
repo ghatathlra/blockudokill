@@ -1,4 +1,5 @@
 import {FC, useState, useEffect, useCallback} from 'react';
+// import {init, solve, calc_score} from 'blockudokill-solver';
 import {init, solve} from 'blockudokill-solver';
 
 import {Placement, SolveResult} from 'types';
@@ -23,6 +24,12 @@ const App: FC<{}> = () => {
       setSolverInitialized(true);
     });
   }, []);
+
+  // useEffect(() => {
+  //   if (solverInitialized) {
+  //     console.log(calc_score(Uint8Array.from(currentGameState)));
+  //   }
+  // }, [solverInitialized, currentGameState]);
 
   const handleGameBoardCellClick = useCallback((i: number) => {
     if (!placementsViewMode) {

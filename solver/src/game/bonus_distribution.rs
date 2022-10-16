@@ -1,6 +1,6 @@
-pub struct ScoreDistribution;
+pub struct BonusDistribution;
 
-impl ScoreDistribution {
+impl BonusDistribution {
   const SCORES: [f32; 81] = [
     0.0, 0.00109375, 0.001875, 0.00234375, 0.0025, 0.00234375, 0.001875, 0.00109375, 0.0,
     0.00109375, 0.0021875, 0.00296875, 0.0034375, 0.00359375, 0.0034375, 0.00296875, 0.0021875, 0.00109375,

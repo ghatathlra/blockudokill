@@ -1,5 +1,6 @@
 use super::{
-  block::Block, ripe_cases::RipeCases, score_distribution::ScoreDistribution, solution::Solution,
+  block::Block, bonus_distribution::BonusDistribution, ripe_cases::RipeCases, score::Score,
+  solution::Solution,
 };
 use std::fmt::Display;
 
@@ -51,13 +52,8 @@ impl GameBoard {
     cells
   }
 
-  pub fn place_block(&mut self, place_position: u8, block: &Block) -> () {
-    self.commit();
-    let cells = block.get_cells();
-    for (_, &val) in cells.iter().enumerate() {
-      self.body[place_position as usize + val as usize] = 1;
-    }
-    self.harvest();
+  pub fn get_body(&self) -> [u8; 81] {
+    self.body
   }
 
   pub fn is_able_to_place_block(&self, place_position: u8, block: &Block) -> bool {
@@ -79,14 +75,17 @@ impl GameBoard {
     is_able
   }
 
-  pub fn calc_score(&self) -> f32 {
-    let mut score: f32 = 0.0;
-    for (i, &val) in self.body.iter().enumerate() {
-      if val == 0 {
-        score += 1.0 + ScoreDistribution::get_score_at(i as u8);
-      }
+  pub fn place_block(&mut self, place_position: u8, block: &Block) -> () {
+    self.commit();
+    let cells = block.get_cells();
+    for (_, &val) in cells.iter().enumerate() {
+      self.body[place_position as usize + val as usize] = 1;
     }
-    score
+    self.harvest();
+  }
+
+  fn commit(&mut self) -> () {
+    self.history.push(self.body);
   }
 
   fn harvest(&mut self) -> () {
@@ -118,8 +117,31 @@ impl GameBoard {
     }
   }
 
-  fn commit(&mut self) -> () {
-    self.history.push(self.body);
+  pub fn calc_score(&self) -> Score {
+    let mut score = Score::new();
+    for (i, &cell_val) in self.body.iter().enumerate() {
+      if cell_val == 0 {
+        score.spaces += 1;
+        score.bonus += BonusDistribution::get_score_at(i as u8);
+        if self.is_hole_cell(i) {
+          score.holes += 1;
+        }
+      }
+    }
+    score
+  }
+
+  fn is_hole_cell(&self, i: usize) -> bool {
+    let mut is_hole = false;
+    let cell_val = self.body[i];
+    if cell_val == 0 {
+      let val_above: u8 = if i / 9 == 0 { 1 } else { self.body[i - 9] };
+      let val_below: u8 = if i / 9 == 8 { 1 } else { self.body[i + 9] };
+      let val_left: u8 = if i % 9 == 0 { 1 } else { self.body[i - 1] };
+      let val_right: u8 = if i % 9 == 8 { 1 } else { self.body[i + 1] };
+      is_hole = val_above == 1 && val_below == 1 && val_left == 1 && val_right == 1;
+    }
+    is_hole
   }
 
   pub fn rollback(&mut self) -> () {
@@ -127,10 +149,6 @@ impl GameBoard {
       let previous_body = self.history.pop().unwrap();
       self.body = previous_body;
     }
-  }
-
-  pub fn get_body(&self) -> [u8; 81] {
-    self.body
   }
 
   pub fn apply_solution(&mut self, solution: &Solution) -> () {

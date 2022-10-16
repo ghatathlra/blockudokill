@@ -1,6 +1,6 @@
 use std::cmp::{Eq, PartialEq};
 use std::collections::HashSet;
-use std::fmt::{Display, Result};
+use std::fmt::{Display, Formatter, Result};
 use std::hash::Hash;
 use std::ptr::eq as ptr_eq;
 
@@ -12,7 +12,7 @@ pub struct Block {
 }
 
 impl Display for Block {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result {
     let mut serialized_cells = String::new();
     let mut iterator = self.cells.iter();
     while let Some(ref_val) = iterator.next() {
