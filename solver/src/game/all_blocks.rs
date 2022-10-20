@@ -2,7 +2,7 @@ use super::block::Block;
 use std::fmt::{Display, Formatter, Result};
 
 pub struct AllBlockCells {
-  blockcells: [Vec<u8>; 47],
+  blockcells: [Vec<u8>; 49],
 }
 
 impl Display for AllBlockCells {
@@ -58,6 +58,8 @@ impl AllBlockCells {
         vec![1, 9, 10, 19],
         vec![1, 9, 10, 11],
         vec![0, 9, 10, 18],
+        vec![0, 10, 20, 30],
+        vec![3, 11, 19, 27],
         vec![0, 1, 2, 3, 4],
         vec![0, 9, 18, 27, 36],
         vec![0, 1, 2, 9, 18],
