@@ -34,6 +34,8 @@ export class AllBlocks {
     Block.fromCells([1, 9, 10, 19]),
     Block.fromCells([1, 9, 10, 11]),
     Block.fromCells([0, 9, 10, 18]),
+    Block.fromCells([0, 10, 20, 30]),
+    Block.fromCells([3, 11, 19, 27]),
     Block.fromCells([0, 1, 2, 3, 4]),
     Block.fromCells([0, 9, 18, 27, 36]),
     Block.fromCells([0, 1, 2, 9, 18]),
